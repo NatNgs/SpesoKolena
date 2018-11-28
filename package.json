@@ -1,0 +1,22 @@
+{
+	"name": "SpesoKolena",
+	"description": "",
+	"version": "0.0.0",
+	"author": "Nathaël Noguès <nathael.nogues@gmail.com> (https://github.com/NatNgs)",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"serverStart": "node Server/server.js"
+	},
+	"homepage": "https://github.com/NatNgs/SpesoKolena#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/NatNgs/SpesoKolena.git"
+	},
+	"bugs": {
+		"url": "https://github.com/NatNgs/SpesoKolena/issues"
+	},
+	"dependencies": {
+		"socket.io": "^2.1.0"
+	}
+}
