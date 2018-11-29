@@ -17,6 +17,7 @@
 		"url": "https://github.com/NatNgs/SpesoKolena/issues"
 	},
 	"dependencies": {
+		"express": "^4.16.4",
 		"socket.io": "^2.1.0"
 	}
 }
