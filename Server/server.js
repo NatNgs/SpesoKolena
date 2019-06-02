@@ -2,12 +2,19 @@ const app = require('express')()
 const server = require('http').Server(app)
 const io = require('socket.io').listen(server)
 const fs = require('fs')
+const game_import = require('./game')
+const game = game_import.game
+const Player = game_import.Player
 
 const PORT = 8765
-server.listen(PORT)
+const GAME_TICK = 1000
 
-io.sockets.on('connection', onConnect)
-console.log('server listening on http://127.0.0.1:' + PORT)
+function serverStart() {
+	server.listen(PORT)
+
+	io.sockets.on('connection', onConnect)
+	console.log('server listening on http://127.0.0.1:' + PORT)
+}
 
 function redirToFile(res, fileName, func=(a=>a)) {
 	fs.readFile(fileName, (err, data)=>{
@@ -22,31 +29,26 @@ function redirToFile(res, fileName, func=(a=>a)) {
 }
 
 app.get('/', (req, res)=>{
-	redirToFile(res, 'Client/index.html',reduceCode)
+	redirToFile(res, 'Client/index.html', reduceCode)
 })
 app.get('/scripts.js', (req, res)=>{
-	redirToFile(res, 'Client/scripts/commands.js',reduceCode)
+	redirToFile(res, 'Client/scripts/commands.js', reduceCode)
 })
 
 // io.emit('cmd', data) // broadcast
 // io.sockets.emit('cmd', who, data); // who = array of sockets
 // socket.emit('cmd', data); // send command to specific
-function Player() {}
-
 const players = []
-let pid = 0
 function onConnect(socket) {
 	const connectBy = socket.handshake.headers.host
 
-	const p = new Player(); // TO BE DEFINED
-	p.name = 'P'+(++pid)
-	p.color = (Math.random()*360)|0
-	console.log('Player '+p.name+' connected to', connectBy)
+	const p = new Player()
+	console.log('Player '+ p.name +' connected from', connectBy)
 
 	socket.on('disconnect', ()=>{
 		players.splice(players.indexOf(p), 1)
-		io.emit('remPlayer', {who:p.name})
-		console.log('Client disconnected of', socket.handshake.headers.host)
+		sendRefreshInformation(io)
+		console.log('Client disconnected from', socket.handshake.headers.host)
 	})
 
 	// data: string (the new name)
@@ -82,20 +84,57 @@ function onConnect(socket) {
 		io.emit('updateUserColor', {who:p.name, color:p.color})
 	})
 
-	socket.on('refreshInformation', data=>{
-		for(let p of players) {
-			socket.emit('addPlayer', {who:p.name, color:p.color})
-		}
+	socket.on('refreshInformation', ()=>{
+		sendRefreshInformation(socket)
 	})
 
+	socket.on('screenMove', move=>{
+		const moveMap = {
+			'up':   [ 0, 1],
+			'down': [ 0, -1],
+			'left': [-1, 0],
+			'right':[ 1, 0],
+		}
+
+		if(!moveMap[move])
+			return
+		
+		p.move(moveMap[move])
+		socket.emit('grid', p.getView())
+	})
+
+	// data: unused
 	socket.on('whoAmI', data=>{
-		socket.emit('whoAmI', {name:p.name, color:p.color})
+		socket.emit('whoAmI', p.toDict())
 	})
 
 	players.push(p)
-	io.emit('addPlayer', {who:p.name, color:p.color})
+	checkGameStart()
+}
+
+function sendRefreshInformation(socket) {
+	playersList = []
+	for(let p of players) {
+		playersList.push({name: p.name, color: p.color})
+	}
+	
+	socket.emit('allPlayers', playersList)
 }
 
 function reduceCode(code) {
 	return (code.toString()).replace(/\n\s+/g,'\n')
 }
+
+function checkGameStart() {
+	if(players.length >= 1) { // First player, launch game.
+		setTimeout(gameLoop, GAME_TICK)
+	}
+}
+function gameLoop() {
+	
+	// Launch next loop soon
+	checkGameStart()
+}
+
+// Starting the server
+serverStart()

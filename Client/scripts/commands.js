@@ -2,35 +2,28 @@ const client = {
 	userList: []
 }
 
-const me = {name: undefined, color: undefined};
+const me = {name: undefined, color: undefined, keyMap: {}};
 let socket
 function init() {
 	socket = io()
-	const remPlayer = data=>{
-		const toRem = client.userList.filter(p=>p.name===data.who)
-		while(toRem.length > 0) {
-			const a = toRem.shift()
-			client.userList.splice(client.userList.indexOf(a), 1)
-		}
-		setTimeout(updateView,0)
-	}
 
-	socket.on('addPlayer', data=>{
-		remPlayer(data)
-		client.userList.push({name:data.who, color:data.color})
+	// Prepare to receive messages
+	socket.on('allPlayers', data=>{
+		client.userList = data
+		console.log('allPlayers', data)
+		updateUserList()
 	})
-	socket.on('remPlayer', remPlayer)
 	socket.on('updateUserName', data=>{
 		client.userList.filter(p=>p.name===data.who)[0].name = data.name
 		if(data.who === me.name)
 			me.name = data.name
-		setTimeout(updateView,0)
+		updateUserList()
 	})
 	socket.on('updateUserColor', data=>{
 		client.userList.filter(p=>p.name===data.who)[0].color = data.color
 		if(data.who === me.name)
 			me.color = data.color
-		setTimeout(updateView,0)
+		updateUserList()
 	})
 	socket.on('errorr', data=>{
 		console.error(data)
@@ -40,26 +33,59 @@ function init() {
 		me.name = data.name
 		me.color = data.color
 	})
+	socket.on('grid', data=>{
+		let grid = '<table border=border>'
+		for(let y = data[0].length -1; y>= 0; y--) {
+			grid += '<tr>'
+			for(let x = 0; x < data.length; x++) {
+				grid += '<td>' + data[x][y] + '</td>'
+			}
+			grid += '</tr>'
+		}
+		$('#grid').html(grid)
+	})
 
+	// Prepare keymap
+	me.keyMap['ArrowUp'] = ()=> {
+		socket.emit('screenMove', 'up')
+	}
+	me.keyMap['ArrowDown'] = ()=> {
+		socket.emit('screenMove', 'down')
+	}
+	me.keyMap['ArrowLeft'] = ()=> {
+		socket.emit('screenMove', 'left')
+	}
+	me.keyMap['ArrowRight'] = ()=> {
+		socket.emit('screenMove', 'right')
+	}
+
+	// Send first messages
 	socket.emit('whoAmI', null)
 	socket.emit('refreshInformation', null)
 }
 
-function updateUserName(inputId) {
-	socket.emit('updateUserName', document.getElementById(inputId).value)
+function onUpdateUserName() {
+	socket.emit('updateUserName', $('#nameInput').val())
 }
 function changeColor() {
-	socket.emit('updateUserColor', (Math.random()*359)|0+1)
+	socket.emit('updateUserColor', (Math.random()*359)|0 +1)
 }
-function updateView() {
-	const userList = document.getElementById('userList')
+function updateUserList() {
 	const userListHtml = client.userList.map(c=>{
-		const style = `style='background-color:hsl(${c.color},75%,75%)'`
-		if(c.name === me.name) {
-			const rid = 'nameInput' + ((Math.random()*(2<<15))|0)
-			return `<div class='user' ${style}><input id='${rid}' onChange='updateUserName("${rid}")' value='${c.name}' ${style} /> <button onclick='changeColor()'>Randomize color</button></div>`
-		} else
-			return `<div class='user' ${style}>${c.name}</div>`
+		const style = `style="background-color:hsl(${c.color},75%,75%)"`
+		if(c.name === me.name)
+			return `<div class="user" ${style}><input id="nameInput" onChange="onUpdateUserName()" value="${c.name}" ${style} /> <button onclick="changeColor()">Randomize color</button></div>`
+		else
+			return `<div class="user" ${style}>${c.name}</div>`
 	}).join('')
-	userList.innerHTML = userListHtml
+	$('#userList').html(userListHtml)
 }
+
+$(document).ready(init)
+$(document).keydown(event=>{
+	const keyCode = event.key
+	if(keyCode) {
+		//console.log(keyCode)
+		me.keyMap[keyCode] && me.keyMap[keyCode]()
+	}
+})
