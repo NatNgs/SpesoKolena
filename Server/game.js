@@ -8,7 +8,7 @@ function Player() {
 	this.name = 'P'+ (++pid)
 	this.color = (Math.random()*360)|0
 	this.locate = [0, 0]
-	
+
 	this.move = function([x, y]) {
 		this.locate[0] += x
 		this.locate[1] += y
@@ -37,7 +37,7 @@ function Game() {
 		}
 		this.grid[''+x][''+y] = set
 	}
-	
+
 	this.getGridAround = function(xy, dist) {
 		const [x, y] = [...xy]
 		const grid = []

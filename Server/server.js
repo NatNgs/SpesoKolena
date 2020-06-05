@@ -98,7 +98,7 @@ function onConnect(socket) {
 
 		if(!moveMap[move])
 			return
-		
+
 		p.move(moveMap[move])
 		socket.emit('grid', p.getView())
 	})
@@ -113,11 +113,11 @@ function onConnect(socket) {
 }
 
 function sendRefreshInformation(socket) {
-	playersList = []
+	const playersList = []
 	for(let p of players) {
 		playersList.push({name: p.name, color: p.color})
 	}
-	
+
 	socket.emit('allPlayers', playersList)
 }
 
@@ -131,7 +131,7 @@ function checkGameStart() {
 	}
 }
 function gameLoop() {
-	
+
 	// Launch next loop soon
 	checkGameStart()
 }
