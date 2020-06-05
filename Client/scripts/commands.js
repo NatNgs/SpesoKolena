@@ -2,7 +2,7 @@ const client = {
 	userList: []
 }
 
-const me = {name: undefined, color: undefined, keyMap: {}};
+const me = {name: undefined, color: undefined, keyMap: {}}
 let socket
 function init() {
 	socket = io()

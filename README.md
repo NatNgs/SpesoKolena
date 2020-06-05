@@ -6,11 +6,14 @@
 # Run
 
 1. `cd .../SpesoKolena/`
-2. `node Server/server.js`
+2. `npm start`
 
 # Development
 
 ## Code Style
 
-Project uses editorconfig IDE configuration file.
-See [EditorConfig IDE and Extensions list](https://editorconfig.org/#download).
+Project embeds style configuration from following sources:
+
+- [EditorConfig](https://editorconfig.org/#download)
+- [ESLint](https://eslint.org/docs/user-guide/integrations).
+

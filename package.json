@@ -1,12 +1,12 @@
 {
-	"name": "SpesoKolena",
-	"description": "",
+	"name": "spesokolena",
+	"description": "SpesoKolena",
 	"version": "0.0.0",
 	"author": "Nathaël Noguès <nathael.nogues@gmail.com> (https://github.com/NatNgs)",
 	"license": "MIT",
 	"private": true,
 	"scripts": {
-		"serverStart": "node Server/server.js"
+		"start": "node Server/server.js"
 	},
 	"homepage": "https://github.com/NatNgs/SpesoKolena#readme",
 	"repository": {
@@ -19,5 +19,8 @@
 	"dependencies": {
 		"express": "^4.16.4",
 		"socket.io": "^2.1.0"
+	},
+	"devDependencies": {
+		"eslint": "^7.1.0"
 	}
 }

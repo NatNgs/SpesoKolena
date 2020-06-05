@@ -3,7 +3,6 @@ const server = require('http').Server(app)
 const io = require('socket.io').listen(server)
 const fs = require('fs')
 const game_import = require('./game')
-const game = game_import.game
 const Player = game_import.Player
 
 const PORT = 8765
@@ -16,7 +15,7 @@ function serverStart() {
 	console.log('server listening on http://127.0.0.1:' + PORT)
 }
 
-function redirToFile(res, fileName, func=(a=>a)) {
+function redirToFile(res, fileName, func=((a)=>a)) {
 	fs.readFile(fileName, (err, data)=>{
 		if (err) {
 			res.writeHead(500)
@@ -52,11 +51,11 @@ function onConnect(socket) {
 	})
 
 	// data: string (the new name)
-	socket.on('updateUserName', data=>{
+	socket.on('updateUserName', (data)=>{
 		const newName = (''+data).match(/[A-Za-z0-9]+/g).join('')
 		if(!newName
 			|| newName.length < 3
-			|| players.filter(p=>p.name===newName).length>0) {
+			|| players.filter((p)=>p.name===newName).length>0) {
 			socket.emit('error', {
 				command: 'updateUserName',
 				msg: `"${newName}" is not a valid name or is already used.`
@@ -69,11 +68,11 @@ function onConnect(socket) {
 	})
 
 	// data: int (between 0 and 359 included, the new hue)
-	socket.on('updateUserColor', hue=>{
+	socket.on('updateUserColor', (hue)=>{
 		if(!hue
 			|| (hue|0)<0
 			|| (hue|0)>=360
-			|| players.filter(p=>p.color===hue).length>0) {
+			|| players.filter((p)=>p.color===hue).length>0) {
 			socket.emit('errorr', {
 				command: 'updateUserColor',
 				msg: `"${hue}" is not a valid color or is already used.`
@@ -88,7 +87,7 @@ function onConnect(socket) {
 		sendRefreshInformation(socket)
 	})
 
-	socket.on('screenMove', move=>{
+	socket.on('screenMove', (move)=>{
 		const moveMap = {
 			'up':   [ 0, 1],
 			'down': [ 0, -1],
@@ -104,7 +103,7 @@ function onConnect(socket) {
 	})
 
 	// data: unused
-	socket.on('whoAmI', data=>{
+	socket.on('whoAmI', (data)=>{
 		socket.emit('whoAmI', p.toDict())
 	})
 
@@ -114,7 +113,7 @@ function onConnect(socket) {
 
 function sendRefreshInformation(socket) {
 	const playersList = []
-	for(let p of players) {
+	for(const p of players) {
 		playersList.push({name: p.name, color: p.color})
 	}
 
