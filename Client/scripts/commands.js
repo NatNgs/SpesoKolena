@@ -39,10 +39,13 @@ function init() {
 		for(let y = data[0].length -1; y>= 0; y--) {
 			grid += '<tr>'
 			for(let x = 0; x < data.length; x++) {
-				const toPrint = data[x][y]
-					?Object.keys(data[x][y]).filter((element)=>element).join(', ')
-					:'&nbsp;'
-				grid += '<td>' + toPrint + '</td>'
+				const toPrint = []
+				if(data[x][y]) {
+					for(const key in data[x][y])
+						if(key)
+							toPrint.push(key + ': ' + (data[x][y][key] * 100 | 0) + '%')
+				}
+				grid += '<td>' + toPrint.join(', ') + '</td>'
 			}
 			grid += '</tr>'
 		}

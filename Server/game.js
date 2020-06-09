@@ -12,7 +12,7 @@ function Game(seed) {
 
 	const init = function() {
 		const t = mapGen.run(_rnd)
-		t.forEach((a)=>THIS.set([a.x, a.y], new Bloc(a.bloc)))
+		t.forEach((a)=>THIS.set([a.x, a.y], a.bloc))
 	}
 
 	//
@@ -81,14 +81,35 @@ function Player() {
 		return {name: this.name, color: this.color}
 	}
 	this.getView = function() {
-		return game.getGridAround(this.locate, PLAYER_VIEW_DISTANCE)
+		const gridAround = game.getGridAround(this.locate, PLAYER_VIEW_DISTANCE)
+		const view = []
+		for(let x=0; x<gridAround.length; x++) {
+			view.push([])
+			for(let y=0; y<gridAround.length; y++) {
+				view[x][y] = gridAround[x][y] ? new Bloc(gridAround[x][y]).toJSON() : {}
+			}
+		}
+		return view
 	}
 }
 
 function Bloc(content) {
 	this.content = content || {}
 	this.isEmpty = ()=>!Object.keys(this.content).length
-	this.toJSON = ()=>this.content
+	this.toJSON = ()=>{
+		const jso = {}
+		let sum = 0
+		for(const key in this.content) {
+			if(this.content[key] <= 0)
+				delete this.content[key]
+			else
+				sum += this.content[key]
+		}
+		for(const key in this.content) {
+			jso[key] = this.content[key] / sum
+		}
+		return jso
+	}
 }
 
 module.exports = {

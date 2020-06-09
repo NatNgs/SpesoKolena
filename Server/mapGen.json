@@ -1,18 +1,29 @@
 {
 	"cores": 5,
-	"coresLocation": {"x": 0, "y": 0, "d": 500},
+	"coresLocation": {"x": 0, "y": 0, "d": 200},
 	"layers": [{
 		"id": "Core",
 		"count": 0,
 		"blocs": [{
 			"content": {
-				"Obsidian": {"from": 1, "to": 1}
+				"Bedrock": {"from": 1, "to": 1}
+			},
+			"chance": 1
+		}]
+	}, {
+		"id": "Near to the Core",
+		"count": 100,
+		"blocs": [{
+			"content": {
+				"Stone": {"from": 0, "to": 4},
+				"Obsidian": {"from": 1, "to": 4},
+				"Diamond": {"from": 0, "to": 3}
 			},
 			"chance": 1
 		}]
 	}, {
 		"id": "Deep mine",
-		"count": 50,
+		"count": 500,
 		"blocs": [{
 			"content": {
 				"Stone": {"from": 1, "to": 1}
@@ -35,7 +46,7 @@
 		}]
 	}, {
 		"id": "Low mine",
-		"count": 200,
+		"count": 500,
 		"blocs": [{
 			"content": {
 				"Stone": {"from": 1, "to": 1}
