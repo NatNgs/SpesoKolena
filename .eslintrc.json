@@ -20,7 +20,7 @@
 		"arrow-spacing": ["error", {"after": false, "before": false}],
 		"indent": ["error", "tab"],
 		"linebreak-style": ["error", "unix"],
-		"no-unused-vars": ["error", {"args": "none"}],
+		"no-unused-vars": ["warn", {"args": "none"}],
 		"prefer-const": ["error", {
 			"destructuring": "all",
 			"ignoreReadBeforeAssign": true
@@ -31,14 +31,12 @@
 		"spaced-comment": ["error", "always"]
 	},
 	"overrides": [{
-		"files": ["Client/*.html", "Client/**/*.js"],
+		"files": ["Client/**", "tmp/**"],
 		"env": {
+			"node": false,
 			"browser": true,
 			"es6": true,
-			"node": false
-		},
-		"plugins": [
-			"jquery"
-		]
+			"jquery": true
+		}
 	}]
 }

@@ -1,3 +1,6 @@
+# Server cache
+tmp/
+
 # Ignore
 *-gitignore.*
 *.gitignore.*
@@ -35,4 +38,3 @@ typings/
 .serverless/
 .fusebox/
 .dynamodb/
-package-lock.json

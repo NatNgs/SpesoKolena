@@ -1,3 +1,4 @@
+/* global io */
 const client = {
 	userList: []
 }
@@ -8,32 +9,32 @@ function init() {
 	socket = io()
 
 	// Prepare to receive messages
-	socket.on('allPlayers', data=>{
+	socket.on('allPlayers', (data)=>{
 		client.userList = data
 		console.log('allPlayers', data)
 		updateUserList()
 	})
-	socket.on('updateUserName', data=>{
-		client.userList.filter(p=>p.name===data.who)[0].name = data.name
+	socket.on('updateUserName', (data)=>{
+		client.userList.filter((p)=>p.name===data.who)[0].name = data.name
 		if(data.who === me.name)
 			me.name = data.name
 		updateUserList()
 	})
-	socket.on('updateUserColor', data=>{
-		client.userList.filter(p=>p.name===data.who)[0].color = data.color
+	socket.on('updateUserColor', (data)=>{
+		client.userList.filter((p)=>p.name===data.who)[0].color = data.color
 		if(data.who === me.name)
 			me.color = data.color
 		updateUserList()
 	})
-	socket.on('errorr', data=>{
+	socket.on('errorr', (data)=>{
 		console.error(data)
 		alert(data.msg)
 	})
-	socket.on('whoAmI', data=>{
+	socket.on('whoAmI', (data)=>{
 		me.name = data.name
 		me.color = data.color
 	})
-	socket.on('grid', data=>{
+	socket.on('grid', (data)=>{
 		let grid = '<table border=border>'
 		for(let y = data[0].length -1; y>= 0; y--) {
 			grid += '<tr>'
@@ -46,16 +47,16 @@ function init() {
 	})
 
 	// Prepare keymap
-	me.keyMap['ArrowUp'] = ()=> {
+	me.keyMap['ArrowUp'] = ()=>{
 		socket.emit('screenMove', 'up')
 	}
-	me.keyMap['ArrowDown'] = ()=> {
+	me.keyMap['ArrowDown'] = ()=>{
 		socket.emit('screenMove', 'down')
 	}
-	me.keyMap['ArrowLeft'] = ()=> {
+	me.keyMap['ArrowLeft'] = ()=>{
 		socket.emit('screenMove', 'left')
 	}
-	me.keyMap['ArrowRight'] = ()=> {
+	me.keyMap['ArrowRight'] = ()=>{
 		socket.emit('screenMove', 'right')
 	}
 
@@ -64,14 +65,14 @@ function init() {
 	socket.emit('refreshInformation', null)
 }
 
-function onUpdateUserName() {
+function onUpdateUserName() { // eslint-disable-line
 	socket.emit('updateUserName', $('#nameInput').val())
 }
-function changeColor() {
+function changeColor() { // eslint-disable-line
 	socket.emit('updateUserColor', (Math.random()*359)|0 +1)
 }
 function updateUserList() {
-	const userListHtml = client.userList.map(c=>{
+	const userListHtml = client.userList.map((c)=>{
 		const style = `style="background-color:hsl(${c.color},75%,75%)"`
 		if(c.name === me.name)
 			return `<div class="user" ${style}><input id="nameInput" onChange="onUpdateUserName()" value="${c.name}" ${style} /> <button onclick="changeColor()">Randomize color</button></div>`
@@ -82,10 +83,10 @@ function updateUserList() {
 }
 
 $(document).ready(init)
-$(document).keydown(event=>{
+$(document).keydown((event)=>{
 	const keyCode = event.key
 	if(keyCode) {
-		//console.log(keyCode)
+		// console.log(keyCode)
 		me.keyMap[keyCode] && me.keyMap[keyCode]()
 	}
 })

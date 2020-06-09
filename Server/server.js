@@ -1,7 +1,7 @@
 const app = require('express')()
 const server = require('http').Server(app)
 const io = require('socket.io').listen(server)
-const fs = require('fs')
+const minifier = require('./minifier')
 const game_import = require('./game')
 const Player = game_import.Player
 
@@ -15,23 +15,17 @@ function serverStart() {
 	console.log('server listening on http://127.0.0.1:' + PORT)
 }
 
-function redirToFile(res, fileName, func=((a)=>a)) {
-	fs.readFile(fileName, (err, data)=>{
-		if (err) {
-			res.writeHead(500)
-			return res.end('Error 500')
-		}
-
-		res.writeHead(200)
-		res.end(func(data))
-	})
-}
-
-app.get('/', (req, res)=>{
-	redirToFile(res, 'Client/index.html', reduceCode)
+app.get('/', (req, res, nxt)=>{
+	console.debug('200: ' + req.originalUrl)
+	minifier.getFileAsync('Client/index.html', (d)=>res.send(d), nxt)
 })
-app.get('/scripts.js', (req, res)=>{
-	redirToFile(res, 'Client/scripts/commands.js', reduceCode)
+app.get('/scripts/:file', (req, res, nxt)=>{
+	console.debug('200: ' + req.originalUrl)
+	minifier.getFileAsync('Client/scripts/' + req.params.file, (d)=>res.send(d), nxt)
+})
+app.get('*', (req, res)=>{
+	console.warn('404: ' + req.originalUrl)
+	res.status(404).send('404: Not Found')
 })
 
 // io.emit('cmd', data) // broadcast
@@ -120,17 +114,12 @@ function sendRefreshInformation(socket) {
 	socket.emit('allPlayers', playersList)
 }
 
-function reduceCode(code) {
-	return (code.toString()).replace(/\n\s+/g,'\n')
-}
-
 function checkGameStart() {
 	if(players.length >= 1) { // First player, launch game.
 		setTimeout(gameLoop, GAME_TICK)
 	}
 }
 function gameLoop() {
-
 	// Launch next loop soon
 	checkGameStart()
 }
