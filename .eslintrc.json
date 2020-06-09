@@ -30,8 +30,9 @@
 		"space-in-parens": ["error", "never"],
 		"spaced-comment": ["error", "always"]
 	},
+	"ignorePatterns": ["tmp/**"],
 	"overrides": [{
-		"files": ["Client/**", "tmp/**"],
+		"files": ["Client/**"],
 		"env": {
 			"node": false,
 			"browser": true,

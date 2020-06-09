@@ -1,3 +1,4 @@
+const UTILS = require('./utils')
 
 let pid = 0
 const PLAYER_VIEW_DISTANCE = 5 // *2+1 to get total field of view
@@ -7,7 +8,7 @@ init()
 function Player() {
 	this.name = 'P'+ (++pid)
 	this.color = (Math.random()*360)|0
-	this.locate = [0, 0]
+	this.locate = game.getAnyLocationNearWall()
 
 	this.move = function([x, y]) {
 		this.locate[0] += x
@@ -22,24 +23,20 @@ function Player() {
 }
 
 function Game() {
-	this.grid = {}
+	const _grid = {}
 	this.get = function(xy) {
-		const [x, y] = [...xy]
-		if(this.grid[''+x] && this.grid[''+x][''+y]) {
-			return this.grid[''+x][''+y]
-		}
-		return null
+		const x = xy[0], y = xy[1]
+		return _grid[x] && _grid[x][y] ? _grid[x][y] : null
 	}
 	this.set = function(xy, set) {
-		const [x, y] = [...xy]
-		if(!this.grid[''+x]) {
-			this.grid[''+x] = {}
-		}
-		this.grid[''+x][''+y] = set
+		const x = xy[0], y = xy[1]
+		if(!_grid[x])
+			_grid[x] = {}
+		_grid[x][y] = set
 	}
 
 	this.getGridAround = function(xy, dist) {
-		const [x, y] = [...xy]
+		const x = xy[0], y = xy[1]
 		const grid = []
 		const decalX = x-dist
 		const decalY = y-dist
@@ -50,6 +47,24 @@ function Game() {
 			}
 		}
 		return grid
+	}
+
+	this.getAnyLocationNearWall = function() {
+		const xs = UTILS.shuffle(Object.keys(_grid))
+		for(const x in xs) {
+			const row = _grid[x]
+			const ys = UTILS.shuffle(Object.keys(row).filter((a)=>a==='Wall'))
+			for(const y in ys) {
+				const around = this.getGridAround([x, y], 1)
+				const tries = UTILS.shuffle([[-1,-1], [-1,0], [-1,1], [0,-1], [0,1], [1,-1], [1,0], [1,1]])
+				for(const t in tries) {
+					if(around[t[0]][t[1]] === null) {
+						return [x + t[0], y + t[1]]
+					}
+				}
+			}
+		}
+		return null
 	}
 }
 

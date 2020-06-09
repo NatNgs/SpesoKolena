@@ -29,8 +29,10 @@ app.get('*', (req, res)=>{
 })
 
 // io.emit('cmd', data) // broadcast
-// io.sockets.emit('cmd', who, data); // who = array of sockets
-// socket.emit('cmd', data); // send command to specific
+// socket.emit('cmd', data) // send command to specific
+// io.to('roomName').emit('cmd', data) // send command to every socket in room
+// socket.join('roomName') // add socket to room
+// socket.leave('roomName') // remove socket from room
 const players = []
 function onConnect(socket) {
 	const connectBy = socket.handshake.headers.host
