@@ -31,6 +31,9 @@ const minifyHTMLSettings = {
 	useShortDoctype: true, // Replaces the doctype with the short (HTML5) doctype
 }
 
+// Path to main folder of the project (to be updated if this file is moved)
+const projectBase = path.join(__dirname, '..')
+
 // Prepare cache folder
 const tmpFolder = 'tmp'
 fs.rmdirSync(tmpFolder, { recursive: true })
@@ -38,56 +41,56 @@ fs.rmdirSync(tmpFolder, { recursive: true })
 const minifiersMap = {
 	// Default (will not be minified)
 	'': (fileName, cbSuccess, cbError)=>{
-		const tmpPath = path.join(tmpFolder, fileName)
-		fs.readFile(fileName, (err, fileContent)=>{
-			if(err || !fileContent)
-				return cbError(err)
-
-			fs.mkdir(
-				path.dirname(tmpPath),
-				{ recursive: true },
-				()=>fs.writeFile(tmpPath, fileContent, NULL_FC)
-			)
-			cbSuccess(fileContent)
-		})
+		const unminifiedPath = path.join(projectBase, fileName)
+		if(fs.existsSync(unminifiedPath))
+			return cbSuccess(unminifiedPath)
+		cbError('File not found ' + unminifiedPath)
 	},
 	'html': (fileName, cbSuccess, cbError)=>{
-		const tmpPath = path.join(tmpFolder, fileName)
+		const minifiedPath = path.join(projectBase, tmpFolder, fileName)
 		fs.readFile(fileName, (err, fileContent)=>{
 			if (err || !fileContent) {
 				return cbError(err)
 			}
-			const minified = minifyHTML(fileContent.toString(), minifyHTMLSettings)
 			fs.mkdir(
-				path.dirname(tmpPath),
+				path.dirname(minifiedPath),
 				{ recursive: true },
-				()=>fs.writeFile(tmpPath, minified, NULL_FC)
+				()=>fs.writeFile(
+					minifiedPath,
+					minifyHTML(
+						fileContent.toString(),
+						minifyHTMLSettings
+					),
+					()=>cbSuccess(minifiedPath)
+				)
 			)
-			cbSuccess(minified)
 		})
 	},
 	'js': (fileName, cbSuccess, cbError)=>{
-		const tmpPath = path.join(tmpFolder, fileName)
-		fs.mkdirSync(path.dirname(tmpPath), { recursive: true })
+		const minifiedPath = path.join(projectBase, tmpFolder, fileName)
+		fs.mkdirSync(path.dirname(minifiedPath), { recursive: true })
 		minify({
 			compressor: minifyJS,
 			options: minifyJSSettings,
 			input: fileName,
-			output: tmpPath,
-		}).then(cbSuccess).catch(cbError)
+			output: minifiedPath,
+		}).then(()=>cbSuccess(minifiedPath)).catch(cbError)
 	},
 	'css': (fileName, cbSuccess, cbError)=>{
-		const tmpPath = path.join(tmpFolder, fileName)
-		fs.mkdirSync(path.dirname(tmpPath), { recursive: true })
+		const minifiedPath = path.join(projectBase, tmpFolder, fileName)
+		fs.mkdirSync(path.dirname(minifiedPath), { recursive: true })
 		minify({
 			compressor: minifyCSS,
 			input: fileName,
-			output: tmpPath,
-		}).then(cbSuccess).catch(cbError)
+			output: minifiedPath,
+		}).then(()=>cbSuccess(minifiedPath)).catch(cbError)
 	},
 }
 
+let debugMode = false
+
 module.exports = {
+	setDebug: (isDebug)=>debugMode = isDebug,
 	getFileAsync: function(fileName, cbSuccess, cbError) {
 		// look for file in tmp folder
 		fs.readFile(path.join(tmpFolder, fileName), (err, minifiedFileContent)=>{
@@ -97,7 +100,7 @@ module.exports = {
 			}
 			const ext = fileName.slice(fileName.lastIndexOf('.')+1)
 			let minifier = minifiersMap[ext]
-			if(!minifier)
+			if(!minifier || debugMode)
 				minifier = minifiersMap['']
 			else
 				console.debug('Minifying ' + fileName + ' to ' + path.join(tmpFolder, fileName))

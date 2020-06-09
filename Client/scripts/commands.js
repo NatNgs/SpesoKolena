@@ -39,7 +39,10 @@ function init() {
 		for(let y = data[0].length -1; y>= 0; y--) {
 			grid += '<tr>'
 			for(let x = 0; x < data.length; x++) {
-				grid += '<td>' + data[x][y] + '</td>'
+				const toPrint = data[x][y]
+					?Object.keys(data[x][y]).filter((element)=>element).join(', ')
+					:'&nbsp;'
+				grid += '<td>' + toPrint + '</td>'
 			}
 			grid += '</tr>'
 		}

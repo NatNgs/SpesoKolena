@@ -1,9 +1,72 @@
 const UTILS = require('./utils')
+const mapGen = require('./mapGen')
 
 let pid = 0
 const PLAYER_VIEW_DISTANCE = 5 // *2+1 to get total field of view
-const game = new Game()
-init()
+const game = new Game(42)
+
+function Game(seed) {
+	const THIS = this
+	const _grid = {}
+	const _rnd = new UTILS.RandomGen()
+
+	const init = function() {
+		const t = mapGen.run(_rnd)
+		t.forEach((a)=>THIS.set([a.x, a.y], new Bloc(a.bloc)))
+	}
+
+	//
+	// Public functions
+
+	this.get = function(xy) {
+		const x = xy[0] | 0, y = xy[1] | 0
+		return _grid[x] && _grid[x][y] ? _grid[x][y] : null
+	}
+	this.set = function(xy, bloc) {
+		const x = xy[0] | 0, y = xy[1] | 0
+		if(!_grid[x])
+			_grid[x] = {}
+		_grid[x][y] = bloc
+	}
+
+	this.getGridAround = function(xy, dist) {
+		const x = xy[0], y = xy[1]
+		const grid = []
+		const decalX = x-dist
+		const decalY = y-dist
+		for(let xi=x-dist; xi<=x+dist; xi++) {
+			grid[xi-decalX] = []
+			for(let yi=y-dist; yi<=y+dist; yi++) {
+				grid[xi-decalX][yi-decalY] = THIS.get([xi, yi])
+			}
+		}
+		return grid
+	}
+
+	this.getAnyLocationNearWall = function() {
+		const sides = UTILS.shuffle([[-1,0], [0,-1], [0,1], [1,0]])
+		const xs = UTILS.shuffle(Object.keys(_grid))
+		for(let x of xs) {
+			const row = _grid[x]
+			x |= 0 // cast to int
+			const ys = UTILS.shuffle(Object.keys(row))
+			for(let y of ys) {
+				y |= 0 // cast to int
+				const around = THIS.getGridAround([x, y], 1)
+				for(const t of sides) {
+					if(around[t[0]+1][t[1]+1] === null) {
+						return [x + t[0], y + t[1]]
+					}
+				}
+			}
+		}
+		console.debug(_grid)
+		return null
+	}
+
+	// Call to init
+	init()
+}
 
 function Player() {
 	this.name = 'P'+ (++pid)
@@ -22,54 +85,10 @@ function Player() {
 	}
 }
 
-function Game() {
-	const _grid = {}
-	this.get = function(xy) {
-		const x = xy[0], y = xy[1]
-		return _grid[x] && _grid[x][y] ? _grid[x][y] : null
-	}
-	this.set = function(xy, set) {
-		const x = xy[0], y = xy[1]
-		if(!_grid[x])
-			_grid[x] = {}
-		_grid[x][y] = set
-	}
-
-	this.getGridAround = function(xy, dist) {
-		const x = xy[0], y = xy[1]
-		const grid = []
-		const decalX = x-dist
-		const decalY = y-dist
-		for(let xi=x-dist; xi<=x+dist; xi++) {
-			grid[xi-decalX] = []
-			for(let yi=y-dist; yi<=y+dist; yi++) {
-				grid[xi-decalX][yi-decalY] = this.get([xi, yi])
-			}
-		}
-		return grid
-	}
-
-	this.getAnyLocationNearWall = function() {
-		const xs = UTILS.shuffle(Object.keys(_grid))
-		for(const x in xs) {
-			const row = _grid[x]
-			const ys = UTILS.shuffle(Object.keys(row).filter((a)=>a==='Wall'))
-			for(const y in ys) {
-				const around = this.getGridAround([x, y], 1)
-				const tries = UTILS.shuffle([[-1,-1], [-1,0], [-1,1], [0,-1], [0,1], [1,-1], [1,0], [1,1]])
-				for(const t in tries) {
-					if(around[t[0]][t[1]] === null) {
-						return [x + t[0], y + t[1]]
-					}
-				}
-			}
-		}
-		return null
-	}
-}
-
-function init() {
-	game.set([0, 0], 'Wall')
+function Bloc(content) {
+	this.content = content || {}
+	this.isEmpty = ()=>!Object.keys(this.content).length
+	this.toJSON = ()=>this.content
 }
 
 module.exports = {

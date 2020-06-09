@@ -1,0 +1,69 @@
+{
+	"cores": 5,
+	"coresLocation": {"x": 0, "y": 0, "d": 500},
+	"layers": [{
+		"id": "Core",
+		"count": 0,
+		"blocs": [{
+			"content": {
+				"Obsidian": {"from": 1, "to": 1}
+			},
+			"chance": 1
+		}]
+	}, {
+		"id": "Deep mine",
+		"count": 50,
+		"blocs": [{
+			"content": {
+				"Stone": {"from": 1, "to": 1}
+			},
+			"chance": 4
+		}, {
+			"content": {
+				"Stone": {"from": 0, "to": 4},
+				"Iron": {"from": 1, "to": 4},
+				"Copper": {"from": 1, "to": 4},
+				"Gold": {"from": 1, "to": 4}
+			},
+			"chance": 2
+		}, {
+			"content": {
+				"Stone": {"from": 0, "to": 4},
+				"Diamond": {"from": 1, "to": 4}
+			},
+			"chance": 1
+		}]
+	}, {
+		"id": "Low mine",
+		"count": 200,
+		"blocs": [{
+			"content": {
+				"Stone": {"from": 1, "to": 1}
+			},
+			"chance": 3
+		}, {
+			"content": {
+				"Stone": {"from": 1, "to": 4},
+				"Iron": {"from": 0, "to": 1},
+				"Copper": {"from": 0, "to": 2}
+			},
+			"chance": 1
+		}]
+	}, {
+		"id": "Surface",
+		"count": 500,
+		"blocs": [{
+			"content": {
+				"Stone": {"from": 1, "to": 4},
+				"": {"from": 0, "to": 2}
+			},
+			"chance": 1
+		}, {
+			"content": {
+				"Sand": {"from": 1, "to": 4},
+				"": {"from": 0, "to": 4}
+			},
+			"chance": 1
+		}]
+	}]
+}

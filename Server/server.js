@@ -7,6 +7,7 @@ const Player = game_import.Player
 
 const PORT = 8765
 const GAME_TICK = 1000
+minifier.setDebug(true)
 
 function serverStart() {
 	server.listen(PORT)
@@ -17,11 +18,11 @@ function serverStart() {
 
 app.get('/', (req, res, nxt)=>{
 	console.debug('200: ' + req.originalUrl)
-	minifier.getFileAsync('Client/index.html', (d)=>res.send(d), nxt)
+	minifier.getFileAsync('Client/index.html', (f)=>res.sendFile(f), nxt)
 })
 app.get('/scripts/:file', (req, res, nxt)=>{
 	console.debug('200: ' + req.originalUrl)
-	minifier.getFileAsync('Client/scripts/' + req.params.file, (d)=>res.send(d), nxt)
+	minifier.getFileAsync('Client/scripts/' + req.params.file, (f)=>res.sendFile(f), nxt)
 })
 app.get('*', (req, res)=>{
 	console.warn('404: ' + req.originalUrl)
@@ -81,6 +82,7 @@ function onConnect(socket) {
 
 	socket.on('refreshInformation', ()=>{
 		sendRefreshInformation(socket)
+		socket.emit('grid', p.getView())
 	})
 
 	socket.on('screenMove', (move)=>{
