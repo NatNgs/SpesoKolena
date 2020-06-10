@@ -1,4 +1,4 @@
-/* global io */
+/* global io, getStyle */
 const client = {
 	userList: []
 }
@@ -35,21 +35,14 @@ function init() {
 		me.color = data.color
 	})
 	socket.on('grid', (data)=>{
-		let grid = '<table border=border>'
+		const grid = $('#grid').empty()
 		for(let y = data[0].length -1; y>= 0; y--) {
-			grid += '<tr>'
+			const row = $('<div/>').css('height', (100/data[0].length)+'%').addClass('aCellRow')
 			for(let x = 0; x < data.length; x++) {
-				const toPrint = []
-				if(data[x][y]) {
-					for(const key in data[x][y])
-						if(key)
-							toPrint.push(key + ': ' + (data[x][y][key] * 100 | 0) + '%')
-				}
-				grid += '<td>' + toPrint.join(', ') + '</td>'
+				row.append(getStyle(data[x][y] || {}).addClass('aCell'))
 			}
-			grid += '</tr>'
+			grid.append(row)
 		}
-		$('#grid').html(grid)
 	})
 
 	// Prepare keymap

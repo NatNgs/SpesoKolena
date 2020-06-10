@@ -1,12 +1,12 @@
 {
 	"cores": 5,
-	"coresLocation": {"x": 0, "y": 0, "d": 200},
+	"coresLocation": {"x": 0, "y": 0, "d": 100},
 	"layers": [{
 		"id": "Core",
 		"count": 0,
 		"blocs": [{
 			"content": {
-				"Bedrock": {"from": 1, "to": 1}
+				"bedrock": {"from": 1, "to": 1}
 			},
 			"chance": 1
 		}]
@@ -15,9 +15,9 @@
 		"count": 100,
 		"blocs": [{
 			"content": {
-				"Stone": {"from": 0, "to": 4},
-				"Obsidian": {"from": 1, "to": 4},
-				"Diamond": {"from": 0, "to": 3}
+				"stone": {"from": 0, "to": 4},
+				"obsidian": {"from": 1, "to": 4},
+				"diamond": {"from": 0, "to": 3}
 			},
 			"chance": 1
 		}]
@@ -26,21 +26,21 @@
 		"count": 500,
 		"blocs": [{
 			"content": {
-				"Stone": {"from": 1, "to": 1}
+				"stone": {"from": 1, "to": 1}
 			},
 			"chance": 4
 		}, {
 			"content": {
-				"Stone": {"from": 0, "to": 4},
-				"Iron": {"from": 1, "to": 4},
-				"Copper": {"from": 1, "to": 4},
-				"Gold": {"from": 1, "to": 4}
+				"stone": {"from": 0, "to": 4},
+				"iron": {"from": 1, "to": 4},
+				"copper": {"from": 1, "to": 4},
+				"gold": {"from": 1, "to": 4}
 			},
 			"chance": 2
 		}, {
 			"content": {
-				"Stone": {"from": 0, "to": 4},
-				"Diamond": {"from": 1, "to": 4}
+				"stone": {"from": 0, "to": 4},
+				"diamond": {"from": 1, "to": 4}
 			},
 			"chance": 1
 		}]
@@ -49,14 +49,14 @@
 		"count": 500,
 		"blocs": [{
 			"content": {
-				"Stone": {"from": 1, "to": 1}
+				"stone": {"from": 1, "to": 1}
 			},
 			"chance": 3
 		}, {
 			"content": {
-				"Stone": {"from": 1, "to": 4},
-				"Iron": {"from": 0, "to": 1},
-				"Copper": {"from": 0, "to": 2}
+				"stone": {"from": 1, "to": 4},
+				"iron": {"from": 0, "to": 1},
+				"copper": {"from": 0, "to": 2}
 			},
 			"chance": 1
 		}]
@@ -65,13 +65,13 @@
 		"count": 500,
 		"blocs": [{
 			"content": {
-				"Stone": {"from": 1, "to": 4},
+				"stone": {"from": 1, "to": 4},
 				"": {"from": 0, "to": 2}
 			},
 			"chance": 1
 		}, {
 			"content": {
-				"Sand": {"from": 1, "to": 4},
+				"water": {"from": 1, "to": 4},
 				"": {"from": 0, "to": 4}
 			},
 			"chance": 1

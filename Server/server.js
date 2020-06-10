@@ -24,6 +24,10 @@ app.get('/scripts/:file', (req, res, nxt)=>{
 	console.debug('200: ' + req.originalUrl)
 	minifier.getFileAsync('Client/scripts/' + req.params.file, (f)=>res.sendFile(f), nxt)
 })
+app.get('/styles/:file', (req, res, nxt)=>{
+	console.debug('200: ' + req.originalUrl)
+	minifier.getFileAsync('Client/styles/' + req.params.file, (f)=>res.sendFile(f), nxt)
+})
 app.get('*', (req, res)=>{
 	console.warn('404: ' + req.originalUrl)
 	res.status(404).send('404: Not Found')
