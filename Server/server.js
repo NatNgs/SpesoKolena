@@ -7,7 +7,7 @@ const Player = game_import.Player
 
 const PORT = 8765
 const GAME_TICK = 1000
-minifier.setDebug(true)
+minifier.setDebug(false)
 
 function serverStart() {
 	server.listen(PORT)

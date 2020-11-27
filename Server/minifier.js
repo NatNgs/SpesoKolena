@@ -6,8 +6,6 @@ const minifyHTML = require('html-minifier-terser').minify
 const minifyJS = require('@node-minify/google-closure-compiler')
 const minifyCSS = require('@node-minify/crass')
 
-const NULL_FC = ()=>{}
-
 const minifyJSSettings = {
 	languageIn: 'ES6',
 	languageOut: 'ES6',
@@ -103,7 +101,7 @@ module.exports = {
 			if(!minifier || debugMode)
 				minifier = minifiersMap['']
 			else
-				console.debug('Minifying ' + fileName + ' to ' + path.join(tmpFolder, fileName))
+				console.log('Minifying ' + fileName + ' to ' + path.join(tmpFolder, fileName))
 			minifier(fileName, cbSuccess, cbError)
 		})
 	}

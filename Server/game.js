@@ -2,7 +2,7 @@ const UTILS = require('./utils')
 const mapGen = require('./mapGen')
 
 let pid = 0
-const PLAYER_VIEW_DISTANCE = 5 // *2+1 to get total field of view
+const PLAYER_VIEW_DISTANCE = 9 // *2+1 to get total field of view
 const game = new Game(42)
 
 function Game(seed) {
@@ -86,30 +86,29 @@ function Player() {
 		for(let x=0; x<gridAround.length; x++) {
 			view.push([])
 			for(let y=0; y<gridAround.length; y++) {
-				view[x][y] = gridAround[x][y] ? new Bloc(gridAround[x][y]).toJSON() : {}
+				view[x][y] = blocToJSON(gridAround[x][y])
 			}
 		}
 		return view
 	}
 }
 
-function Bloc(content) {
-	this.content = content || {}
-	this.isEmpty = ()=>!Object.keys(this.content).length
-	this.toJSON = ()=>{
-		const jso = {}
-		let sum = 0
-		for(const key in this.content) {
-			if(this.content[key] <= 0)
-				delete this.content[key]
-			else
-				sum += this.content[key]
-		}
-		for(const key in this.content) {
-			jso[key] = this.content[key] / sum
-		}
+function blocToJSON(bloc) {
+	const jso = {}
+	if(!bloc)
 		return jso
+
+	let sum = 0
+	for(const key in bloc) {
+		if(bloc[key] <= 0)
+			delete bloc[key]
+		else
+			sum += bloc[key]
 	}
+	for(const key in bloc) {
+		jso[key] = bloc[key] / sum
+	}
+	return jso
 }
 
 module.exports = {

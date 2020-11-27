@@ -1,8 +1,8 @@
 .squareContainer {
 	position: relative;
 	height: 0;
-	width: 50%;
-	padding-bottom: 50%;
+	width: min(100vw, 80vh);
+	padding-bottom: min(100vw, 80vh);
 	border: solid 1px black;
 }
 #grid {

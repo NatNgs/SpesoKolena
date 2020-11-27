@@ -35,6 +35,7 @@ function Generator(rnd) {
 		const descriptor = {x: Math.round(x), y: Math.round(y), bloc: coreBloc}
 		blocs.push(descriptor)
 		surface.push(descriptor)
+		console.log(descriptor.x, descriptor.y)
 	}
 
 	const findSurfaceSpace = function(ttry=0) {

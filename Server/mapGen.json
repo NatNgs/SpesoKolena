@@ -1,6 +1,6 @@
 {
 	"cores": 5,
-	"coresLocation": {"x": 0, "y": 0, "d": 100},
+	"coresLocation": {"x": 0, "y": 0, "d": 20},
 	"layers": [{
 		"id": "Core",
 		"count": 0,
