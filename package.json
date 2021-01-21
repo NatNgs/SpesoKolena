@@ -23,7 +23,7 @@
 		"@node-minify/crass": "^5.3.0",
 		"@node-minify/core": "^5.3.0",
 		"@node-minify/google-closure-compiler": "^5.3.0",
-		"socket.io": "^2.1.0"
+		"socket.io": "^2.4.0"
 	},
 	"devDependencies": {
 		"eslint": "^7.1.0"
