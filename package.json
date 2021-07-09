@@ -18,11 +18,8 @@
 		"url": "https://github.com/NatNgs/SpesoKolena/issues"
 	},
 	"dependencies": {
-		"@node-minify/core": "^6.2.0",
-		"@node-minify/crass": "^6.2.0",
-		"@node-minify/google-closure-compiler": "^6.2.0",
+		"minify": "^7.0.2",
 		"express": "^4.17.1",
-		"html-minifier-terser": "^5.1.1",
 		"socket.io": "^4.1.2"
 	},
 	"devDependencies": {
