@@ -20,7 +20,7 @@
 	"dependencies": {
 		"minify": "^7.0.2",
 		"express": "^4.17.1",
-		"socket.io": "^4.1.2"
+		"socket.io": "^4.6.1"
 	},
 	"devDependencies": {
 		"eslint": "^7.20.0"
