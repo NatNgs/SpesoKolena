@@ -18,11 +18,11 @@
 		"url": "https://github.com/NatNgs/SpesoKolena/issues"
 	},
 	"dependencies": {
-		"minify": "^7.0.2",
-		"express": "^4.17.1",
-		"socket.io": "^4.6.1"
+		"minify": "^7.2.2",
+		"express": "^4.21.0",
+		"socket.io": "^4.7.5"
 	},
 	"devDependencies": {
-		"eslint": "^7.20.0"
+		"eslint": "^7.32.0"
 	}
 }
