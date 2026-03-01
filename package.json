@@ -1,7 +1,7 @@
 {
 	"name": "spesokolena",
 	"description": "SpesoKolena",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"author": "Nathaël Noguès <nathael.nogues@gmail.com> (https://github.com/NatNgs)",
 	"license": "MIT",
 	"private": true,
